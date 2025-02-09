@@ -1,6 +1,6 @@
 apiVersion: v2
-name: 
-description: A Helm chart to distribute the project 
+name: sealos-operator
+description: A Helm chart to distribute the project sealos-operator
 type: application
 version: 0.1.0
 appVersion: "0.1.0"

@@ -25,9 +25,9 @@ metadata:
     {{- include "chart.labels" . | nindent 4 }}
 spec:
   dnsNames:
-    - .{{ .Release.Namespace }}.svc
-    - .{{ .Release.Namespace }}.svc.cluster.local
-    - -webhook-service.{{ .Release.Namespace }}.svc
+    - sealos-operator.{{ .Release.Namespace }}.svc
+    - sealos-operator.{{ .Release.Namespace }}.svc.cluster.local
+    - sealos-operator-webhook-service.{{ .Release.Namespace }}.svc
   issuerRef:
     kind: Issuer
     name: selfsigned-issuer
@@ -49,9 +49,9 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   dnsNames:
-    - .{{ .Release.Namespace }}.svc
-    - .{{ .Release.Namespace }}.svc.cluster.local
-    - -metrics-service.{{ .Release.Namespace }}.svc
+    - sealos-operator.{{ .Release.Namespace }}.svc
+    - sealos-operator.{{ .Release.Namespace }}.svc.cluster.local
+    - sealos-operator-metrics-service.{{ .Release.Namespace }}.svc
   issuerRef:
     kind: Issuer
     name: selfsigned-issuer

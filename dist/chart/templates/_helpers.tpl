@@ -5,10 +5,10 @@
   {{- else if .Values.nameOverride }}
     {{ .Values.nameOverride | trunc 63 | trimSuffix "-" }}
   {{- else }}
-    
+    sealos-operator
   {{- end }}
 {{- else }}
-  
+  sealos-operator
 {{- end }}
 {{- end }}
 
