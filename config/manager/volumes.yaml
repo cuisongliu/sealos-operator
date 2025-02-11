@@ -23,7 +23,7 @@ spec:
           - name: sealos
             mountPath: /data/.sealos
           - name: bin
-            mountPath: /usr/bin/sealos
+            mountPath: /usr/bin/sealos-root
       volumes:
         - name: ssh
           hostPath:
