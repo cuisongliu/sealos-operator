@@ -87,7 +87,7 @@ const (
 // ApplicationStatus defines the observed state of Application.
 type ApplicationStatus struct {
 	// Phase represents the current phase of Application.
-	//+kubebuilder:default:=Unknown
+	// +kubebuilder:default:=Unknown
 	Phase ApplicationPhase `json:"phase,omitempty"`
 	// Conditions contains the different condition statuses for this Application.
 	// +optional
