@@ -4,13 +4,11 @@
 # More info: https://book.kubebuilder.io/reference/project-config.html
 domain: github.com
 layout:
-- helm.kubebuilder.io/v1-alpha
 - grafana.kubebuilder.io/v1-alpha
 - go.kubebuilder.io/v4
 plugins:
   go.kubebuilder.io/v4: {}
   grafana.kubebuilder.io/v1-alpha: {}
-  helm.kubebuilder.io/v1-alpha: {}
 projectName: sealos-operator
 repo: github.com/cuisongliu/sealos-operator
 resources:

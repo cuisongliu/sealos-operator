@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-manager
+  namespace: system
+spec:
+  template:
+    spec:
+      containers:
+      - name: manager
+        resources:
+          limits:
+            cpu: 500m
+            memory: 128Mi
+            ephemeral-storage: 10Gi
+          requests:
+            cpu: 10m
+            memory: 64Mi
+            ephemeral-storage: 20Gi
+        volumeMounts:
+          - name: ssh
+            mountPath: /root/.ssh
+          - name: sealos
+            mountPath: /data/.sealos
+      volumes:
+        - name: ssh
+          hostPath:
+            path: /root/.ssh
+        - name: cluster
+          hostPath:
+            path: /root/.sealos
+
