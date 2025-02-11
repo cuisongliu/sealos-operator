@@ -72,7 +72,7 @@ test-e2e: manifests generate fmt vet ## Run the e2e tests. Expected an isolated 
 		echo "sealos is not installed. Please install sealos manually."; \
 		exit 1; \
 	}
-	@kubectl get nodes | grep -q 'control-plane'  || { \
+	@sudo kubectl get nodes | grep -q 'control-plane'  || { \
 		echo "No k8s cluster is running. Please start a k8s cluster before running the e2e tests."; \
 		exit 1; \
 	}
