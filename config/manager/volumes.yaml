@@ -22,6 +22,8 @@ spec:
             mountPath: /root/.ssh
           - name: sealos
             mountPath: /data/.sealos
+          - name: bin
+            mountPath: /usr/bin/sealos
       volumes:
         - name: ssh
           hostPath:
@@ -29,4 +31,7 @@ spec:
         - name: cluster
           hostPath:
             path: /root/.sealos
+        - name: bin
+          hostPath:
+            path: /usr/bin/sealos
 
