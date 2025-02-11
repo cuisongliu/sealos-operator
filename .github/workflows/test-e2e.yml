@@ -17,18 +17,25 @@ jobs:
         with:
           go-version-file: go.mod
 
-      - name: Install the latest version of kind
+      - name: Install the latest version of sealos
         run: |
-          curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
-          chmod +x ./kind
-          sudo mv ./kind /usr/local/bin/kind
-
-      - name: Verify kind installation
-        run: kind version
-
-      - name: Create kind cluster
-        run: kind create cluster
-
+          curl -sfL https://raw.githubusercontent.com/labring/sealos/v5.0.0/scripts/install.sh | sh -s v5.0.0  labring/sealos
+      - name: Verify sealos installation
+        run: sealos version
+      - name: Create sealos cluster
+        run: |
+          sudo systemctl unmask containerd
+          sudo systemctl unmask docker
+          sudo apt-get remove -y moby-buildx moby-cli moby-compose moby-containerd moby-engine
+          sudo apt-get remove docker docker-engine docker.io containerd runc
+          sudo apt-get purge docker-ce docker-ce-cli containerd.io # docker-compose-plugin
+          sudo apt-get remove -y moby-engine moby-cli moby-buildx moby-compose
+          sudo rm -rf /var/run/docker.sock
+          sudo rm -rf /run/containerd/containerd.sock
+          sudo sealos run labring/kubernetes:v1.27.7 
+          sleep 10
+          sudo kubectl get pods -A
+          sudo kubectl get svc -A
       - name: Running Test e2e
         run: |
           go mod tidy
