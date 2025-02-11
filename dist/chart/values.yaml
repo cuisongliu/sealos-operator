@@ -65,11 +65,11 @@ metrics:
 
 # [PROMETHEUS]: To enable a ServiceMonitor to export metrics to Prometheus set true
 prometheus:
-  enable: true
+  enable: false
 
 # [CERT-MANAGER]: To enable cert-manager injection to webhooks set true
 certmanager:
-  enable: true
+  enable: false
 
 # [NETWORK POLICIES]: To enable NetworkPolicies set true
 networkPolicy:
