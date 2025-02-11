@@ -56,6 +56,10 @@ spec:
               mountPath: /tmp/k8s-metrics-server/metrics-certs
               readOnly: true
             {{- end }}
+            - name: ssh
+              mountPath: /root/.ssh
+            - name: sealos-config
+              mountPath: /data/.sealos
           {{- end }}
       securityContext:
         {{- toYaml .Values.controllerManager.securityContext | nindent 8 }}
@@ -68,4 +72,10 @@ spec:
           secret:
             secretName: metrics-server-cert
         {{- end }}
+        - name: ssh
+          hostPath:
+            path: /root/.ssh
+        - name: sealos-config
+          hostPath:
+            path: /root/.sealos
       {{- end }}
