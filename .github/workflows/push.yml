@@ -57,6 +57,8 @@ jobs:
           curl -sfL https://raw.githubusercontent.com/labring/sealos/v5.0.0/scripts/install.sh | sh -s v5.0.0  labring/sealos
       - name: build image
         run: |
+          REPO=ghcr.io/${{ github.repository_owner }}/sealos-operator-sealos TAG=latest make set-image
+          cat deploy/charts/sealos-operator/values.yaml
           cd deploy
           IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/sealos-operator-sealos:latest"
           sudo sealos build -t "${IMAGE_NAME}"-amd64 --platform linux/amd64 . && sudo rm -rf registry
