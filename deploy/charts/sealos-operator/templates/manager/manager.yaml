@@ -33,7 +33,7 @@ spec:
             {{- end }}
           command:
             - /manager
-          image: {{ .Values.controllerManager.container.image.repository }}:{{ .Values.controllerManager.container.image.tag }}
+          image: {{ .Values.repository }}:{{ .Values.tag }}
           {{- if .Values.controllerManager.container.env }}
           env:
             {{- range $key, $value := .Values.controllerManager.container.env }}
