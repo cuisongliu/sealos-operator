@@ -1,0 +1,113 @@
+name: 🔍 Go for Push
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  job0:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Prepare
+        id: prepare
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          echo ::set-output name=tag_name::${TAG}
+      - name: set up buildx
+        id: buildx
+        uses: crazy-max/ghaction-docker-buildx@v1
+        with:
+          version: latest
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GH_TOKEN }}
+      - name: build (and publish) main image
+        env:
+          # fork friendly ^^
+          DOCKER_REPO: ghcr.io/${{ github.repository_owner }}/sealos-operator
+        run: |
+          IMG=${DOCKER_REPO}:latest make docker-buildx
+
+  job1:
+    runs-on: ubuntu-20.04
+    needs: job0
+    steps:
+      - name: Checkout
+        uses: actions/checkout@master
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Install sealos
+        run: |
+          curl -sfL https://raw.githubusercontent.com/labring/sealos/v5.0.0/scripts/install.sh | sh -s v5.0.0  labring/sealos
+      - name: build image
+        run: |
+          cd deploy
+          IMAGE_NAME="ghcr.io/${{ github.repository_owner }}/sealos-operator-sealos:latest"
+          sudo sealos build -t "${IMAGE_NAME}"-amd64 --platform linux/amd64 . && sudo rm -rf registry
+          sudo sealos build -t "${IMAGE_NAME}"-arm64 --platform linux/arm64 . && sudo rm -rf registry
+          sudo sealos login -u ${{ github.repository_owner }} -p ${{ secrets.GH_TOKEN }} --debug ghcr.io
+          bash manifest.sh ${IMAGE_NAME}
+
+
+  test-e2e:
+    name: Run on Ubuntu
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone the code
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Install the latest version of sealos
+        run: |
+          curl -sfL https://raw.githubusercontent.com/labring/sealos/v5.0.0/scripts/install.sh | sh -s v5.0.0  labring/sealos
+      - name: Verify sealos installation
+        run: sealos version
+      - name: Create sealos cluster
+        run: |
+          sudo systemctl unmask containerd
+          sudo systemctl unmask docker
+          sudo apt-get remove -y moby-buildx moby-cli moby-compose moby-containerd moby-engine
+          sudo apt-get remove docker docker-engine docker.io containerd runc
+          sudo apt-get purge docker-ce docker-ce-cli containerd.io # docker-compose-plugin
+          sudo apt-get remove -y moby-engine moby-cli moby-buildx moby-compose
+          sudo rm -rf /var/run/docker.sock
+          sudo rm -rf /run/containerd/containerd.sock
+          sudo sealos run docker.io/labring/kubernetes:v1.28.14
+          sleep 10
+          sudo kubectl get pods -A
+          sudo kubectl get svc -A
+      - name: Running Test e2e
+        run: |
+          go mod tidy
+          sudo make test
+
+
+#  sync:
+#    runs-on: ubuntu-20.04
+#    needs: job1
+#    env:
+#      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+#    steps:
+#      - name: build
+#        run: |
+#          gh issue comment ${{ vars.SEALOS_ISSUE_NUMBER }} --body "/imagebuild_apps automq-operator latest" --repo ${{ vars.SEALOS_ISSUE_REPO }}

@@ -224,3 +224,17 @@ mv $(1) $(1)-$(3) ;\
 } ;\
 ln -sf $(1)-$(3) $(1)
 endef
+
+
+helm:
+	kubebuilder edit --plugins=helm/v1-alpha
+	rm -rf deploy/charts/sealos-operator
+	cp -rf dist/chart deploy/charts/sealos-operator
+
+REPO?=ghcr.io/cuisongliu/sealos-operator
+TAG?=latest
+
+.PHONY: set-image
+set-image:
+	@sed -i '/#replace_by_makefile_repo/!b;n;c\repository: ${REPO}' deploy/charts/sealos-operator/values.yaml
+	@sed -i '/#replace_by_makefile_tag/!b;n;c\repository: ${TAG}' deploy/charts/sealos-operator/values.yaml

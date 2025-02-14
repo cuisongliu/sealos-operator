@@ -6,9 +6,12 @@ domain: github.com
 layout:
 - grafana.kubebuilder.io/v1-alpha
 - go.kubebuilder.io/v4
+- helm/v1-alpha
 plugins:
   go.kubebuilder.io/v4: {}
   grafana.kubebuilder.io/v1-alpha: {}
+  helm.kubebuilder.io/v1-alpha: {}
+  helm/v1-alpha: {}
 projectName: sealos-operator
 repo: github.com/cuisongliu/sealos-operator
 resources:
