@@ -36,6 +36,8 @@ spec:
           image: {{ .Values.repository }}:{{ .Values.tag }}
           {{- if .Values.controllerManager.container.env }}
           env:
+            - name: NAMESPACE_NAME
+              value: "{{.Release.Namespace}}"
             {{- range $key, $value := .Values.controllerManager.container.env }}
             - name: {{ $key }}
               value: {{ $value }}
@@ -59,6 +61,8 @@ spec:
             - name: {{ .name }}
               mountPath: {{ .mountPath }}
             {{- end }}
+            - name: sealos
+              mountPath: /var/lib/sealos
       securityContext:
         {{- toYaml .Values.controllerManager.securityContext | nindent 8 }}
       serviceAccountName: {{ .Values.controllerManager.serviceAccountName }}
@@ -74,3 +78,6 @@ spec:
           hostPath:
             path: {{ .hostPath.path }}
         {{- end }}
+        - name: sealos
+          hostPath:
+            path: {{.Values.sealos.data}}

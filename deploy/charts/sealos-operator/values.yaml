@@ -79,10 +79,11 @@ networkPolicy:
 
 
 sealos:
+  data: /var/lib/sealos
   mount:
     - name: ssh
       mountPath: /root/.ssh
-    - name: sealos
+    - name: cluster
       mountPath: /data/.sealos
     - name: bin
       mountPath: /usr/bin/sealos-root
