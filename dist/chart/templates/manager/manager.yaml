@@ -57,12 +57,18 @@ spec:
               mountPath: /tmp/k8s-metrics-server/metrics-certs
               readOnly: true
             {{- end }}
-            {{- range .Values.sealos.mount}}
-            - name: {{ .name }}
-              mountPath: {{ .mountPath }}
-            {{- end }}
             - name: sealos
               mountPath: /var/lib/sealos
+            - name: ssh
+              mountPath: /root/.ssh
+            - name: cluster
+              mountPath: /data/.sealos
+            - name: bin
+              mountPath: /usr/bin/sealos-root
+            - name: containers
+              mountPath: {{.Values.sealos.containers}}
+            - name: run-containers
+              mountPath: {{.Values.sealos.runContiners}}
       securityContext:
         {{- toYaml .Values.controllerManager.securityContext | nindent 8 }}
       serviceAccountName: {{ .Values.controllerManager.serviceAccountName }}
@@ -73,11 +79,21 @@ spec:
           secret:
             secretName: metrics-server-cert
         {{- end }}
-        {{- range .Values.sealos.volume }}
-        - name: {{ .name }}
-          hostPath:
-            path: {{ .hostPath.path }}
-        {{- end }}
         - name: sealos
           hostPath:
             path: {{.Values.sealos.data}}
+        - name: ssh
+          hostPath:
+            path: /root/.ssh
+        - name: cluster
+          hostPath:
+            path: /root/.sealos
+        - name: bin
+          hostPath:
+            path: /usr/bin/sealos
+        - name: containers
+          hostPath:
+            path: {{.Values.sealos.containers}}
+        - name: run-containers
+          hostPath:
+            path: {{.Values.sealos.runContiners}}

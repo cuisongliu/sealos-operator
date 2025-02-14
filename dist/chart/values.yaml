@@ -82,20 +82,5 @@ networkPolicy:
 
 sealos:
   data: /var/lib/sealos
-  mount:
-    - name: ssh
-      mountPath: /root/.ssh
-    - name: cluster
-      mountPath: /data/.sealos
-    - name: bin
-      mountPath: /usr/bin/sealos-root
-  volume:
-    - name: ssh
-      hostPath:
-        path: /root/.ssh
-    - name: cluster
-      hostPath:
-        path: /root/.sealos
-    - name: bin
-      hostPath:
-        path: /usr/bin/sealos
+  containers: /var/lib/containers
+  runContiners: /run/containers
