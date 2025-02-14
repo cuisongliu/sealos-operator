@@ -237,4 +237,4 @@ TAG?=latest
 .PHONY: set-image
 set-image:
 	@sed -i '/#replace_by_makefile_repo/!b;n;c\repository: ${REPO}' deploy/charts/sealos-operator/values.yaml
-	@sed -i '/#replace_by_makefile_tag/!b;n;c\repository: ${TAG}' deploy/charts/sealos-operator/values.yaml
+	@sed -i '/#replace_by_makefile_tag/!b;n;c\tag: ${TAG}' deploy/charts/sealos-operator/values.yaml
