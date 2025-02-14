@@ -96,7 +96,8 @@ jobs:
           sudo rm -rf /var/run/docker.sock
           sudo rm -rf /run/containerd/containerd.sock
           sudo sealos run docker.io/labring/kubernetes:v1.28.14 docker.io/labring/helm:v3.9.4
-          sleep 10
+          sudo sealos run ghcr.io/${{ github.repository_owner }}/sealos-operator-sealos:latest
+          sleep 15
           sudo kubectl get pods -A
           sudo kubectl get svc -A
       - name: Running Test e2e
