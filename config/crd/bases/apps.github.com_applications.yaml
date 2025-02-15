@@ -75,13 +75,19 @@ spec:
                     in a Container.
                   properties:
                     name:
-                      description: Name of the environment variable. Must be a C_IDENTIFIER.
+                      default: HELM_OPTS
+                      description: Name of the environment variable.
                       type: string
-                    value:
-                      description: |-
-                        Optional: no more than one of the following may be specified.
-                        Defaults to "".
-                      type: string
+                    setStrings:
+                      description: SetStrings set STRING values on the command line
+                      items:
+                        type: string
+                      type: array
+                    sets:
+                      description: Sets of the set values on the command line
+                      items:
+                        type: string
+                      type: array
                     valueFrom:
                       description: Source for the environment variable's value. Cannot
                         be used if value is not empty.
@@ -109,6 +115,10 @@ spec:
                           - key
                           type: object
                           x-kubernetes-map-type: atomic
+                        raw:
+                          description: Raw data in the helm var source.
+                          type: object
+                          x-kubernetes-preserve-unknown-fields: true
                         secretKeyRef:
                           description: Selects a key of a secret in the pod's namespace
                           properties:
@@ -136,6 +146,8 @@ spec:
                       type: object
                   required:
                   - name
+                  - setStrings
+                  - sets
                   type: object
                 type: array
               image:

@@ -19,6 +19,7 @@ package v1beta1
 import (
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
 // EnvVar represents an environment variable present in a Container.
@@ -34,13 +35,13 @@ type EnvVar struct {
 
 // HelmVar represents an environment variable present in a Container.
 type HelmVar struct {
-	// Name of the environment variable. Must be a C_IDENTIFIER.
+	// Name of the environment variable.
+	// +kubebuilder:default:=HELM_OPTS
 	Name string `json:"name"`
-
-	// Optional: no more than one of the following may be specified.
-	// Defaults to "".
-	// +optional
-	Value string `json:"value,omitempty"`
+	// Sets of the set values on the command line
+	Sets []string `json:"sets"`
+	// SetStrings set STRING values on the command line
+	SetStrings []string `json:"setStrings"`
 	// Source for the environment variable's value. Cannot be used if value is not empty.
 	// +optional
 	ValueFrom *HelmVarSource `json:"valueFrom,omitempty" protobuf:"bytes,3,opt,name=valueFrom"`
@@ -54,6 +55,9 @@ type HelmVarSource struct {
 	// Selects a key of a secret in the pod's namespace
 	// +optional
 	SecretKeyRef *v1.SecretKeySelector `json:"secretKeyRef,omitempty"`
+	// Raw data in the helm var source.
+	// +kubebuilder:pruning:PreserveUnknownFields
+	Raw runtime.RawExtension `json:"raw,omitempty" protobuf:"bytes,3,opt,name=raw"`
 }
 
 // ApplicationSpec defines the desired state of Application.
