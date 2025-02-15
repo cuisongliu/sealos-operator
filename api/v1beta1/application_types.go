@@ -62,6 +62,9 @@ type HelmVarSource struct {
 
 // ApplicationSpec defines the desired state of Application.
 type ApplicationSpec struct {
+	// Dependencies specifies the applications that must be ready before this application can be executed.
+	// +optional
+	Dependencies []Dependency `json:"dependencies,omitempty"`
 	// Container image name.
 	// More info: https://kubernetes.io/docs/concepts/containers/images
 	// This field is optional to allow higher level config management to default or override
@@ -78,6 +81,14 @@ type ApplicationSpec struct {
 	Helm []HelmVar `json:"helm,omitempty"`
 }
 
+type Dependency struct {
+	// Name of the dependent application.
+	// +optional
+	Name string `json:"name,omitempty"`
+	// GVK specifies the Group, Version, and Kind of the dependent resource.
+	// +optional
+	GVK *metav1.GroupVersionKind `json:"gvk,omitempty"`
+}
 type ApplicationPhase string
 
 // These are the valid phases of node.

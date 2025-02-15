@@ -52,6 +52,31 @@ spec:
           spec:
             description: ApplicationSpec defines the desired state of Application.
             properties:
+              dependencies:
+                description: Dependencies specifies the applications that must be
+                  ready before this application can be executed.
+                items:
+                  properties:
+                    gvk:
+                      description: GVK specifies the Group, Version, and Kind of the
+                        dependent resource.
+                      properties:
+                        group:
+                          type: string
+                        kind:
+                          type: string
+                        version:
+                          type: string
+                      required:
+                      - group
+                      - kind
+                      - version
+                      type: object
+                    name:
+                      description: Name of the dependent application.
+                      type: string
+                  type: object
+                type: array
               env:
                 description: |-
                   List of environment variables to set in the container.
